@@ -1,51 +1,50 @@
 #include <stdio.h>
 
-int main()
-{
+int main() {
     int n;
-    printf("Enter the number of the n:");
+    printf("Enter the number of the n: ");
     scanf("%d", &n);
 
+    // Declare a matrix with dynamic size
     double mat[n][n];
     int i, j;
-    for (i = 0; i < n; i++)
-    {
-        for (j = 0; j < n; j++)
-        {
-            printf("Enter the %d element of %d row:", j + 1, i + 1);
+
+    // Input matrix elements from the user
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            printf("Enter the %d element of row %d: ", j + 1, i + 1);
             scanf("%lf", &mat[i][j]);
         }
     }
     printf("\n");
 
-    for (int i = 0; i < n; i++) //for taking input from user in row
-    {
-        for (int j = 0; j < n; j++) //for taking input from user in column
-        {
+    // Display the input matrix
+    printf("Matrix:\n");
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
             printf(" %lf ", mat[i][j]);
         }
         printf("\n");
     }
     printf("\n");
 
-    double multipler;
+    double multiplier;
     double divider;
-    double determinate = 1;
+    double determinant = 1.0;
     double swap[n];
     int sign = 1;
 
-    for (int a = 0; a < n; a++) //for changing the value of the row
-    {
+    // Gaussian Elimination
+    for (int a = 0; a < n; a++) {
         divider = mat[a][a];
-        if (divider == 0) //if diagonal element became 0 then swap the above rows.
-        {
-            if (a == n - 1 && mat[n - 1][n - 1] == 0)
-            {
-                determinate = 0;
+        
+        // Check if the diagonal element is zero and swap rows if needed
+        if (divider == 0) {
+            if (a == n - 1 && mat[n - 1][n - 1] == 0) {
+                determinant = 0.0;
                 break;
             }
-            for (j = 0; j < n; j++) //foor swaping the rows
-            {
+            for (j = 0; j < n; j++) {
                 swap[j] = mat[a + 1][j];
                 mat[a + 1][j] = mat[a][j];
                 mat[a][j] = swap[j];
@@ -53,23 +52,26 @@ int main()
             sign = -1 * sign;
         }
         divider = mat[a][a];
-        for (j = a; j < n; j++) //dividing to make 1 (R1---->R1/a)
-        {
+
+        // Normalize the current row to make the diagonal element 1
+        for (j = a; j < n; j++) {
             mat[a][j] = mat[a][j] / divider;
         }
-        determinate = determinate * divider;
+        determinant = determinant * divider;
 
-        for (i = a + 1; i < n; i++) //for changing the value of multiplying factor(a) and making 0(R2--->R2-aR1)
-        {
-            multipler = mat[i][a];
-            for (j = 0; j < n; j++) //effect of (R2--->R2-aR1)
-            {
-                mat[i][j] = mat[i][j] - multipler * mat[a][j];
+        // Eliminate non-zero elements below the diagonal
+        for (i = a + 1; i < n; i++) {
+            multiplier = mat[i][a];
+            for (j = 0; j < n; j++) {
+                mat[i][j] = mat[i][j] - multiplier * mat[a][j];
             }
         }
     }
 
-    printf("\ndeterminate = %lf", determinate * sign);
+    // Calculate the determinant
+    determinant = determinant * sign;
+
+    printf("\nDeterminant = %lf\n", determinant);
 
     return 0;
 }
